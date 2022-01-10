@@ -48,6 +48,40 @@
   command: "{{ helm_bin_path }} install {{ item.key }} {{ helm_charts_path }}/{{ item.value }}.tgz -n {{ helm_name_space }} -f {{ values_file_path }}"
   loop: "{{ odim_svc_helmcharts | dict2items  }}"
 
+- name: Adding the files for logrotation in odimra
+  shell: |
+    cd /etc/logrotate.d
+    sudo rm -rf odimra
+    sudo touch odimra
+    cat << EOF >> odimra
+    /var/log/odimra/*.log
+    /opt/keepalived/logs/action_script.log
+    /opt/nginx/logs/error.log
+    /opt/nginx/logs/access.log {
+            hourly
+            missingok
+            rotate 10
+            notifempty
+            maxsize 1M
+            compress
+            create 0644 odimra odimra
+            shred
+            copytruncate
+    }
+
+  tags: logrotate
+
+- name:  Running the command for logrotation
+  shell: | 
+    cd /etc/cron.hourly
+    sudo rm -rf logrotate
+    sudo touch logrotate
+    echo logrotate -s /var/lib/logrotate/status /etc/logrotate.d/odimra >> logrotate
+    sudo logrotate -v -f /etc/logrotate.d/odimra
+    
+  tags: logrotate  
+    
+
 - name: Get list of plugins under plugin helm charts path
   find:
     paths: "{{ odimPluginPath }}"

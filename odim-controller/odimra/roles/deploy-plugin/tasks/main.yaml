@@ -52,5 +52,27 @@
     "{{ groups['kube-node'] }}"
   when: odimra.haDeploymentEnabled is defined and odimra.haDeploymentEnabled|bool
 
+
+  #- name: Checking if the log path for {{ release_name }} is present
+  #  shell: |
+          #    sed -i '0,/{{ release_name }}/{/{{ release_name }}/d;}' /etc/logrotate.d/odimra
+  
+
+- name: checking log rotation in master node
+  shell: |
+    cd /etc/logrotate.d
+    sed -i '0,/{{ release_name }}/{/{{ release_name }}/d;}' /etc/logrotate.d/odimra
+    sed -i '1i/var/log/{{ release_name }}_logs/*.log' odimra
+    
+
+- name: running log rotation in master node
+  shell: |
+    cd /etc/cron.hourly
+    sudo logrotate -v -f /etc/logrotate.d/odimra
+
+  delegate_to: "{{ item }}"
+  loop:
+    "{{ groups['kube-node'] }}"
+
 - name: Deploy {{ release_name }}
   shell: "{{ helm_bin_path }} upgrade {{ release_name }} {{ helm_charts_path }}/{{ release_name }}/*.tgz -n {{ helm_name_space }} -f {{ helm_charts_path }}/{{ release_name }}/{{ release_name }}-config.yaml -f {{ values_file_path }} --install --cleanup-on-fail"
