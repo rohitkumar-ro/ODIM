@@ -12,6 +12,7 @@
 #WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #License for the specific language governing permissions and limitations
 # under the License.
+start_time=`date +%s`
 
 export DOCKER_BUILDKIT=1
 
@@ -77,3 +78,6 @@ eval_cmd_exec "/usr/bin/docker build -f install/Docker/dockerfiles/Dockerfile.ur
 eval_cmd_exec "/usr/bin/docker build -f install/Docker/dockerfiles/Dockerfile.grfplugin -t grfplugin:3.0 ." "grfplugin"
 eval_cmd_exec "/usr/bin/docker build -f install/Docker/dockerfiles/Dockerfile.dellplugin -t dellplugin:2.0 ." "dellplugin"
 eval_cmd_exec "/usr/bin/docker build -f install/Docker/dockerfiles/Dockerfile.lenovoplugin -t lenovoplugin:1.0 ." "lenovoplugin"
+
+end_time=`date +%s`
+echo execution completed in `expr $end_time - $start_time`s

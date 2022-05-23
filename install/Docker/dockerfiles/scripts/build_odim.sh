@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 # (C) Copyright [2020] Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -13,7 +13,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-protos=("account" "aggregator" "auth" "chassis" "events" "fabrics" "managers" "role" "session" "systems" "task" "telemetry" "update" "compositionservice" "licenses")
+protos=("account" "aggregator" "auth" "chassis" "events" "fabrics" "managers" "role" "session" "systems" "task" "telemetry" "update" "compositionservice")
 for str in ${protos[@]}; do
   proto_path="$(pwd)/lib-utilities/proto/$str"
   proto_file_name="$str.proto"
