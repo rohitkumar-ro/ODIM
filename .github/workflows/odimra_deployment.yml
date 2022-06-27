@@ -208,6 +208,7 @@ jobs:
         kubectl get pods -n kube-system -o wide
         echo
         cd ${ODIM_SOURCE_PATH}/
+        docker login --username=rohitkr215--password=rohit@007 --email rohitk@hpe.com
         time ./build_images.sh
         
         cd ${ODIM_CONTROLLER_PATH}/scripts/
