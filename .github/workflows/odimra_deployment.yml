@@ -174,6 +174,10 @@ jobs:
         echo "[$(date)] -- INFO  -- configured values in kube_deploy_nodes.yaml"
         cat kube_deploy_nodes.yaml
         echo
+        echo "===========creating odimra images=============="
+        cd ${ODIM_SOURCE_PATH}/
+        docker login -u rohitkr215 -p rohit@007 
+        time ./build_images.sh
         
         echo "==============updating the docker handler========="
         cd ${ODIM_CONTROLLER_PATH}/kubespray
@@ -207,10 +211,7 @@ jobs:
         echo "[$(date)] -- INFO  -- list pods in kube-system namespace"
         kubectl get pods -n kube-system -o wide
         echo
-        cd ${ODIM_SOURCE_PATH}/
-        docker login -u rohitkr215 -p rohit@007 
-        time ./build_images.sh
-        
+                
         cd ${ODIM_CONTROLLER_PATH}/scripts/
         python3 odim-controller.py --deploy odimra --config ${ODIM_CONTROLLER_PATH}/scripts/kube_deploy_nodes.yaml
         echo 
