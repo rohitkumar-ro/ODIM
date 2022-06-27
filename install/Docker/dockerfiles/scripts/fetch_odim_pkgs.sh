@@ -27,11 +27,3 @@ for str in ${protos[@]}; do
   protoc --go_opt=M$proto_file_name=./ --go_out=plugins=grpc:$proto_path --proto_path=$proto_path $proto_file_name
 done
 
-
-LIST=`ls | grep -v 'lib-rest-client' | grep -E '^svc-|^plugin-|add-hosts'`
-for i in $LIST; do
-    cd $i
-    go mod download
-    go mod vendor
-    cd ../
-done
